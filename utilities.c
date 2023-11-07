@@ -6,33 +6,44 @@
 /*   By: sokur <sokur@student.42kocaeli.com.tr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:28:08 by sokur             #+#    #+#             */
-/*   Updated: 2023/09/29 11:22:23 by sokur            ###   ########.fr       */
+/*   Updated: 2023/11/04 17:41:17 by sokur            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-unsigned long	get_time(void)
+void	remastered_usleep(unsigned long time)
+{
+	unsigned long	start;
+
+	start = get_time();
+	while (get_time() - start < time)
+		usleep(100);
+}
+
+long	get_time(void)
 {
 	struct timeval	time;
-	// mikrosec : 1 sec = 1.000.000 microsec
-	// milisec : 1 sec = 1.000 miliseconds // time.tv_sec = seconds, time.tv_usec = microseconds
+
 	gettimeofday(&time, NULL);
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void	print(t_philo *philo, char *situation)
+void	print(t_philo *philo, char *status)
 {
-	if (philo->is_dead)
+	printf("%ld %d %s\n",
+		get_time() - philo->table->dinner_time, philo->phid, status);
+}
+
+int	shovel(t_table *table)
+{
+	pthread_mutex_lock(&table->eyes_on_the_table);
+	if (table->dead_philo)
 	{
-		pthread_mutex_lock(&philo->table->write);
-		printf("%ld %d %s\n", get_time() - philo->table->start, philo->phid, situation);
-		pthread_mutex_unlock(&philo->table->write);
+		pthread_mutex_unlock(&table->eyes_on_the_table);
+		return (1);
 	}
 	else
-	{
-		pthread_mutex_lock(&philo->table->write);
-		printf("%ld %d %s\n", get_time() - philo->table->start, philo->phid, situation);
-		pthread_mutex_unlock(&philo->table->write);
-	}
+		pthread_mutex_unlock(&table->eyes_on_the_table);
+	return (0);
 }

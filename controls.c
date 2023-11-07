@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input_controls.c                                   :+:      :+:    :+:   */
+/*   controls.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sokur <sokur@student.42kocaeli.com.tr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:53:22 by sokur             #+#    #+#             */
-/*   Updated: 2023/09/27 16:29:08 by sokur            ###   ########.fr       */
+/*   Updated: 2023/11/04 17:31:35 by sokur            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,39 +68,37 @@ static int	value_control(int argc, char **argv)
 			return (1);
 		i++;
 	}
-	if (ft_atoi(argv[1]) > 200)
-		return (1);
-	if (ft_atoi(argv[2]) < 60 || ft_atoi(argv[3]) < 60 || ft_atoi(argv[4]) < 60)
+	if (argv[5] && ft_atoi(argv[5]) <= 0)
 		return (1);
 	return (0);
 }
 
-static void put_instructions()
+static void	put_instructions(void)
 {
 	printf("\n\n");
-	printf("----------------------- Wrong input! -------------------------\n\n");
-	printf("--------- 'at least 4 arguments, at most 5 arguments' --------- \n");
+	printf("-------------------- Wrong input! ----------------------\n\n");
+	printf("------ 'at least 4 arguments, at most 5 arguments' ------ \n");
 	printf("\n");
-	printf("Arg 1 : number_of_philosophers ~~~~~~~~~~~~~~~~~~~~~~~ (1 - 200)\n");
-	printf("Arg 2 : time_to_die --------------------------- (higher than 60)\n");
-	printf("Arg 3 : time_to_eat ~~~~~~~~~~~~~~~~~~~~~~~~~~~ (higher than 60)\n");
-	printf("Arg 4 : time_to_sleep ------------------------- (higher than 60)\n");
-	printf("Arg 5 (optional) : num_each_philosopher_must_eat (higher than 0)\n");
+	printf("Arg 1 : number_of_philosophers \n");
+	printf("Arg 2 : time_to_die \n");
+	printf("Arg 3 : time_to_eat \n");
+	printf("Arg 4 : time_to_sleep \n");
+	printf("Arg 5 (optional) : num_each_philosopher_must_eat \n");
 	printf("\n");
-	printf("---------------------------------------------------------------\n\n");
+	printf("---------------------------------------------------------\n\n");
 }
 
-int check_inputs(int argc, char **argv)
+int	check_inputs(int argc, char **argv)
 {
-	if (argc < 5 || argc > 6)
+	if (argc != 5 && argc != 6)
 	{
 		put_instructions();
-		exit(0);
+		return (1);
 	}
 	if (is_digit(argc, argv) || value_control(argc, argv))
 	{
 		put_instructions();
-		exit(0);
+		return (1);
 	}
 	return (0);
 }
